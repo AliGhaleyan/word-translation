@@ -12,7 +12,7 @@
                     <div class="col-8">
                         <div class="card">
                             <div class="card-header">
-                                <h3>View "{{ $word->title }}" word detail</h3>
+                                <h3>View "{{ $word->getTitle() }}" word detail</h3>
                             </div>
 
                             <div class="card-body">
@@ -29,52 +29,52 @@
 
                                     <tbody>
                                     @foreach($translations as $translate)
-                                        <tr id="show-row-{{ $translate->id }}" class="show-row">
-                                            <td>{{ $translate->id }}</td>
+                                        <tr id="show-row-{{ $translate->getId() }}" class="show-row">
+                                            <td>{{ $translate->getId() }}</td>
                                             <td>
                                                 <strong>
-                                                    {{ $translate->title }}
+                                                    {{ $translate->getTitle() }}
                                                 </strong>
                                             </td>
-                                            <td class="text-muted">{{ ucfirst($translate->part_speech) }}</td>
-                                            <td class="text-muted">{{ date("Y/m/d H:i:s", strtotime($translate->created_at)) }}</td>
+                                            <td class="text-muted">{{ ucfirst($translate->getPartSpeech()) }}</td>
+                                            <td class="text-muted">{{ $translate->getCreatedAt() }}</td>
                                             <td>
                                                 <div class="btn-group mr-2" role="group" aria-label="Operation group">
                                                     <button type="button"
                                                             class="btn btn-sm btn-primary show-edit-translation"
-                                                            data-id="{{ $translate->id }}">
+                                                            data-id="{{ $translate->getId() }}">
                                                         Edit
                                                     </button>
                                                     <button type="button" class="btn btn-sm btn-danger delete-translation"
-                                                            data-url="{{ route("translation.destroy", ["translation" => $translate->id]) }}">
+                                                            data-url="{{ route("translation.destroy", ["translation" => $translate->getId()]) }}">
                                                         Delete
                                                     </button>
                                                 </div>
                                             </td>
                                         </tr>
 
-                                        <tr id="edit-row-{{ $translate->id }}" style="display: none" class="edit-row">
-                                            <td>{{ $translate->id }}</td>
+                                        <tr id="edit-row-{{ $translate->getId() }}" style="display: none" class="edit-row">
+                                            <td>{{ $translate->getId() }}</td>
                                             <td>
-                                                <input type="text" id="translation-title-{{ $translate->id }}"
-                                                       value="{{ $translate->title }}">
+                                                <input type="text" id="translation-title-{{ $translate->getId() }}"
+                                                       value="{{ $translate->getTitle() }}">
                                             </td>
                                             <td>
-                                                <select type="text" id="translation-part-speech-{{ $translate->id }}">
-                                                    <x-part-speech-options selected="{{ $translate->part_speech }}"/>
+                                                <select type="text" id="translation-part-speech-{{ $translate->getId() }}">
+                                                    <x-part-speech-options selected="{{ $translate->getPartSpeech() }}"/>
                                                 </select>
                                             </td>
-                                            <td class="text-muted">{{ date("Y/m/d H:i:s", strtotime($translate->created_at)) }}</td>
+                                            <td class="text-muted">{{ $translate->getCreatedAt() }}</td>
                                             <td>
                                                 <div class="btn-group mr-2" role="group" aria-label="Operation group">
                                                     <button type="button"
                                                             class="btn btn-sm btn-primary edit-translation"
-                                                            data-id="{{ $translate->id }}"
-                                                            data-url="{{ route("translation.update", ["translation" => $translate->id]) }}">
+                                                            data-id="{{ $translate->getId() }}"
+                                                            data-url="{{ route("translation.update", ["translation" => $translate->getId()]) }}">
                                                         Edit
                                                     </button>
                                                     <button type="button" class="btn btn-sm btn-secondary cancel-edit"
-                                                            data-id="{{ $translate->id }}">
+                                                            data-id="{{ $translate->getId() }}">
                                                         Cancel
                                                     </button>
                                                 </div>
@@ -107,7 +107,7 @@
                                         </select>
                                     </div>
 
-                                    <input type="hidden" value="{{ $word->id }}" name="word_id">
+                                    <input type="hidden" value="{{ $word->getId() }}" name="word_id">
                                     <button type="submit" class="btn btn-outline-success">
                                         Submit
                                     </button>
@@ -128,7 +128,7 @@
 @section("scripts")
     <script>
         let csrf = "{{ csrf_token() }}";
-        let wordId = "{{ $word->id }}";
+        let wordId = "{{ $word->getId() }}";
 
         jQuery(function ($) {
             $(".show-edit-translation").click(function () {

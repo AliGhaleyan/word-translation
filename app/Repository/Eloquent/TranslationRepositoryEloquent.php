@@ -5,9 +5,9 @@ namespace App\Repository\Eloquent;
 
 
 use App\Models\Translation;
-use App\Repository\BaseRepository;
+use App\Repository\EloquentBaseRepository;
 
-class TranslationRepository extends BaseRepository
+class TranslationRepositoryEloquent extends EloquentBaseRepository
 {
     const PART_SPEECHES = [
         "verbs",

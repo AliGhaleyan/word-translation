@@ -6,7 +6,7 @@ namespace App\Repository;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BaseRepository implements EloquentRepositoryInterface
+class EloquentBaseRepository implements EloquentRepositoryInterface
 {
     /** @var Model $model */
     protected $model;

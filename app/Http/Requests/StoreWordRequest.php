@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Entities\Word;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreWordRequest extends FormRequest
 {
@@ -24,7 +26,7 @@ class StoreWordRequest extends FormRequest
     public function rules()
     {
         return [
-            "title" => "required|string|unique:words",
+            "title" => ["required", "string", "unique:" . Word::class],
         ];
     }
 }

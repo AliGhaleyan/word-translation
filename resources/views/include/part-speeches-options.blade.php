@@ -1,3 +1,3 @@
-@foreach(\App\Repository\Eloquent\TranslationRepository::PART_SPEECHES as $partSpeech)
+@foreach(\App\Repository\Eloquent\TranslationRepositoryEloquent::PART_SPEECHES as $partSpeech)
     <option value="{{ $partSpeech }}">{{ ucfirst($partSpeech) }}</option>
 @endforeach

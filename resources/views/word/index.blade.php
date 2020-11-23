@@ -43,22 +43,23 @@
             </tr>
             </thead>
             <tbody>
+            <?php /** @var \App\Entities\Word $word */ ?>
             @foreach($words as $word)
                 <tr>
-                    <td>{{ $word->id }}</td>
+                    <td>{{ $word->getId() }}</td>
                     <td>
                         <strong>
-                            {{ $word->title }}
+                            {{ $word->getTitle() }}
                         </strong>
                     </td>
-                    <td class="text-muted">{{ date('Y/m/d H:i:s', strtotime($word->created_at)) }}</td>
+                    <td class="text-muted">{{ date('Y/m/d H:i:s', strtotime($word->getCreatedAt())) }}</td>
                     <td>
                         <div class="btn-group mr-2" role="group" aria-label="Operation group">
-                            <a href="{{ route("word.show", ["word" => $word->id]) }}" class="btn btn-sm btn-primary">View</a>
-                            <a href="{{ route("word.edit", ["word" => $word->id]) }}"
+                            <a href="{{ route("word.show", ["word" => $word->getId()]) }}" class="btn btn-sm btn-primary">View</a>
+                            <a href="{{ route("word.edit", ["word" => $word->getId()]) }}"
                                class="btn btn-sm btn-info">Edit</a>
                             <button type="button" class="btn btn-sm btn-danger delete-word"
-                                    data-url="{{ route("word.destroy", ["word" => $word->id]) }}">
+                                    data-url="{{ route("word.destroy", ["word" => $word->getId()]) }}">
                                 Delete
                             </button>
                         </div>

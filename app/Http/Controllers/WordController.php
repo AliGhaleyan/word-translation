@@ -4,32 +4,48 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreWordRequest;
 use App\Http\Requests\UpdateWordRequest;
-use App\Models\Word;
-use App\Repository\Eloquent\WordRepository;
+use App\Entities\Word;
+use App\Mutation\Doctrine\WordMutation;
+use App\Repository\Doctrine\WordRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class WordController extends Controller
+/**
+ * Class WordController
+ * @package App\Http\Controllers
+ *
+ * @method Word findById($id)
+ */
+class WordController extends BaseController
 {
-    /** @var WordRepository $wordRepository */
-    protected $wordRepository;
-
-    public function __construct(WordRepository $wordRepository)
+    public function __construct(WordRepository $wordRepository, WordMutation $wordMutation)
     {
-        $this->wordRepository = $wordRepository;
+        $this->repository = $wordRepository;
+        $this->mutation = $wordMutation;
     }
 
 
-    public function index()
+    public function index(Request $request)
     {
+        $page = $request->input("page", 1);
+        $perPage = $request->input("per_page", 5);
+        $filter = [
+            "title" => $request->input("title")
+        ];
+
         return view("word.index", [
-            "words" => $this->wordRepository->paginate(5)
+            "words" => $this->repository->setFilter($filter)->paginate($page, $perPage)
         ]);
     }
 
 
     public function store(StoreWordRequest $request)
     {
-        if ($this->wordRepository->create($request->validated()))
+        $title = $request->input("title");
+
+        $word = new Word($title);
+
+        if ($this->mutation->create($word, $request->validated()))
             $message = [
                 "type" => "success",
                 "text" => trans("messages.created", ["attribute" => "word"])
@@ -50,30 +66,36 @@ class WordController extends Controller
     }
 
 
-    public function show(Word $word)
+    public function show($id)
     {
-        $translations = $word->translations()->get();
+        $word = $this->findById($id);
+
+        $translations = $word->getTranslations();
 
         return view("word.view", compact("word", "translations"));
     }
 
 
-    public function edit(Word $word)
+    public function edit($id)
     {
+        $word = $this->findById($id);
+
         return view("word.edit", compact("word"));
     }
 
 
-    public function update(Word $word, UpdateWordRequest $request)
+    public function update($id, UpdateWordRequest $request)
     {
+        $word = $this->findById($id);
+
         $validator = Validator::make($request->all(), [
             "title" => "required|string" .
-                ($request->input("title") != $word->title ? "|unique:words" : ""),
+                ($request->input("title") != $word->getTitle() ? ("|unique:" . Word::class) : ""),
         ]);
         if ($validator->fails())
             return back()->withErrors($validator);
 
-        $updated = $this->wordRepository->update($word, $request->validated());
+        $updated = $this->mutation->update($word, $request->validated());
 
         return redirect(route("word.index"))->with("message", [
             "type" => $updated ? "success" : "danger",
@@ -82,9 +104,11 @@ class WordController extends Controller
     }
 
 
-    public function destroy(Word $word)
+    public function destroy($id)
     {
-        $deleted = $this->wordRepository->delete($word);
+        $word = $this->findById($id);
+
+        $deleted = $this->mutation->delete($word);
 
         return back()->with("message", [
             "type" => $deleted ? "success" : "danger",

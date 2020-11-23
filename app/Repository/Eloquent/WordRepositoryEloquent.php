@@ -5,9 +5,9 @@ namespace App\Repository\Eloquent;
 
 
 use App\Models\Word;
-use App\Repository\BaseRepository;
+use App\Repository\EloquentBaseRepository;
 
-class WordRepository extends BaseRepository
+class WordRepositoryEloquent extends EloquentBaseRepository
 {
     public function __construct(Word $word)
     {

@@ -17,7 +17,7 @@ class CreateTranslationsTable extends Migration
             $table->id();
             $table->string("title");
             $table->string("slug");
-            $table->enum("part_speech", \App\Repository\Eloquent\TranslationRepository::PART_SPEECHES);
+            $table->enum("part_speech", \App\Repository\Eloquent\TranslationRepositoryEloquent::PART_SPEECHES);
             $table->bigInteger("word_id")->unsigned();
             $table->foreign("word_id")->references("id")
                 ->on("words")->onDelete("cascade");
